@@ -1,0 +1,14 @@
+{
+  "name": "bluelava-newsletter",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "newsletter:send": "NODE_EXTRA_CA_CERTS=$HOME/.npm/macos-system-certs.pem NODE_USE_SYSTEM_CA=1 node scripts/newsletter/send-newsletter.mjs",
+    "newsletter:install-cron": "bash scripts/newsletter/install-cron.sh",
+    "newsletter:install-schedule": "bash scripts/newsletter/install-launchagent.sh"
+  },
+  "dependencies": {
+    "nodemailer": "^6.10.0"
+  }
+}
