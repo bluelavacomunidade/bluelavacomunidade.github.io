@@ -5,27 +5,27 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>BlueLava — Perturbação (detalhe)</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root{--primary:#4A90E2;--bg:#f4f7f6;--white:#fff;--text:#333}
-    html,body{margin:0;color:var(--text);font-family:Roboto,Arial,sans-serif;background-color:#0b1f3d}
+    html,body{margin:0;color:var(--text);font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.6;background-color:#0b1f3d}
     .top-banner{background:linear-gradient(180deg,#000f2a,#2b4cb8);color:#fff;padding:14px 16px}
     .top-banner-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
-    .banner-title{font-weight:700;font-size:1.05rem}
+    .banner-title{font-weight:700;font-size:1.05rem;font-family:'Inter',sans-serif}
     .wrap{max-width:980px;margin:22px auto;padding:0 16px}
     .card{background:#fff;border:1px solid #ececec;border-radius:12px;padding:18px;box-shadow:0 10px 26px rgba(0,0,0,.06)}
-    .title{margin:8px 0 4px;font-size:1.6rem}
-    .meta{color:#4A90E2;font-weight:700}
+    .title{margin:8px 0 4px;font-size:1.8rem;font-family:'Inter',sans-serif;font-weight:700}
+    .meta{color:#4A90E2;font-weight:600;font-family:'Inter',sans-serif}
     .simple-box{margin-top:12px;background:#f3f8ff;border:1px solid #d5e6ff;border-radius:10px;padding:12px}
     .comments{margin-top:22px}
-    .story-call{margin:0 0 12px;padding:10px 12px;background:#fff8e8;border:1px solid #ffe2a6;border-radius:8px;font-weight:700;color:#6a4a00}
-    .like-popcorn{background:#fff3d9;color:#6a4a00;border:1px solid #ffd48a;border-radius:999px;padding:6px 12px;cursor:pointer;font-weight:700}
-    input,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;font-family:inherit}
+    .story-call{margin:0 0 12px;padding:10px 12px;background:#fff8e8;border:1px solid #ffe2a6;border-radius:8px;font-weight:700;color:#6a4a00;font-family:'Inter',sans-serif}
+    .like-popcorn{background:#fff3d9;color:#6a4a00;border:1px solid #ffd48a;border-radius:999px;padding:6px 12px;cursor:pointer;font-weight:700;font-family:'Inter',sans-serif}
+    input,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;font-family:'Inter',sans-serif}
     textarea{min-height:110px;resize:vertical}
-    button{background:var(--primary);color:#fff;border:none;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:700}
-    .comment{background:#fafafa;border:1px solid #ececec;border-radius:10px;padding:12px;margin:10px 0}
+    button{background:var(--primary);color:#fff;border:none;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:700;font-family:'Inter',sans-serif}
+    .comment{background:#fafafa;border:1px solid #ececec;border-radius:10px;padding:12px;margin:10px 0;font-family:'Inter',sans-serif}
     .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    .back{display:inline-block;margin-bottom:12px;text-decoration:none;color:#1a5eb8;font-weight:700}
+    .back{display:inline-block;margin-bottom:12px;text-decoration:none;color:#1a5eb8;font-weight:700;font-family:'Inter',sans-serif}
     .dis-image{width:100%;height:280px;object-fit:cover;border-radius:10px}
     .source{margin-top:18px;font-size:.95rem}
     .source a{color:var(--primary)}
@@ -39,6 +39,15 @@
       <div class="banner-title">Comunidade Blue Lava</div>
     </div>
   </header>
+
+  <nav class="site-nav" aria-label="Main navigation">
+    <div class="container" style="display:flex;gap:12px;align-items:center;justify-content:center">
+      <a href="portal.html?tab=historias" class="nav-link">Histórias</a>
+      <a href="portal.html?tab=compreender" class="nav-link active">Compreender</a>
+      <a href="portal.html?tab=recursos" class="nav-link">Recursos</a>
+      <a href="portal.html?tab=origem" class="nav-link">Origem</a>
+    </div>
+  </nav>
 
   <div class="wrap">
     <a class="back" href="community.html">← Voltar à comunidade</a>
@@ -240,6 +249,18 @@
 
     function render() {
       const params = new URLSearchParams(window.location.search); const id = Number(params.get('id'));
+      // preserve anonymous preference when arriving via the main entry
+      if (params.get('anon') === '1') {
+        try { document.getElementById('anonInput').checked = true; } catch(e) {}
+        const back = document.querySelector('.back'); if (back) back.href = 'portal.html?tab=compreender&anon=1';
+        // update top navigation links to include anon param
+        document.querySelectorAll('.site-nav a').forEach(a=>{
+          try{
+            const href = a.getAttribute('href'); if(!href) return; if(href.startsWith('http')||href.startsWith('#')||href.startsWith('mailto:')) return;
+            a.href = href + (href.includes('?') ? '&anon=1' : '?anon=1');
+          }catch(e){}
+        });
+      }
       const item = disorders.find(d => d.id === id);
       if (!item) { document.querySelector('.wrap').innerHTML = '<p>Perturbação não encontrada. <a href="community.html">Voltar</a></p>'; return; }
       document.title = `BlueLava - ${item.category}`;

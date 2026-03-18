@@ -5,33 +5,51 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>BlueLava Community</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
 	<style>
 		:root{--primary:#4A90E2;--bg:#f4f7f6;--white:#fff;--text:#333}
-		html,body{margin:0;color:var(--text);font-family:Roboto,Arial,sans-serif;background-color:#0b1f3d;background-image:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),url('assets/images/background-fixed.jpg'),url('assets/images/background website.jpeg');background-repeat:no-repeat,no-repeat,no-repeat;background-position:center center,center center,center center;background-size:cover,cover,cover;background-attachment:fixed,fixed,fixed}
+		html,body{margin:0;color:var(--text);font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;background-color:#0b1f3d;background-image:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),url('assets/images/background-fixed.jpg'),url('assets/images/background website.jpeg');background-repeat:no-repeat,no-repeat,no-repeat;background-position:center center,center center,center center;background-size:cover,cover,cover;background-attachment:fixed,fixed,fixed}
 		.top-banner{background:linear-gradient(180deg,#000f2a,#2b4cb8);color:#fff;padding:14px 16px}
 		.top-banner-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
-		.banner-title{font-weight:700;font-size:1.05rem}
+		.banner-title{font-weight:700;font-size:1.05rem;font-family:'Inter',sans-serif}
 		.social-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;background:#000;color:#fff;text-decoration:none;box-shadow:0 4px 10px rgba(0,0,0,.28);transition:transform .15s ease,opacity .15s ease}
 		.social-btn:hover{transform:translateY(-1px);opacity:.92}
 		.social-btn i{font-size:18px}
 		.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;background:transparent;color:#fff;text-align:center;padding:24px}
 		.hero-logo{display:block;max-width:160px;width:100%;height:auto;margin:0 auto 14px}
-		.hero-title{font-family:'Patrick Hand',cursive;font-size:3rem;margin:0 0 10px}
-		.hero-sub{margin:0 0 22px;opacity:.95}
-		.hero-quote{margin:14px 0 8px;font-family:'Patrick Hand',cursive;font-size:1.15rem}
+		.hero-title{font-family:'Patrick Hand',cursive;font-size:1.6rem;margin:0 0 8px;font-weight:400}
+		.hero-headline{font-family:'Inter',sans-serif;font-weight:700;font-size:2.4rem;margin:0 0 12px;line-height:1.08}
+		.hero-sub{margin:0 0 14px;opacity:.95;font-family:'Inter',sans-serif;font-weight:400;font-size:1.05rem}
+		.hero-quote{margin:14px 0 8px;font-family:'Inter',sans-serif;font-weight:700;font-size:2.4rem;line-height:1.12}
 		.stat{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:12px 18px;border-radius:12px}
-		.btn{margin-top:18px;background:var(--white);color:var(--primary);padding:11px 24px;border:none;border-radius:999px;font-weight:700;cursor:pointer}
+		.btn{margin-top:18px;background:var(--white);color:var(--primary);padding:11px 24px;border:none;border-radius:999px;font-weight:600;font-family:'Inter',sans-serif;text-transform:none;cursor:pointer}
 
-		.letter-wrap{max-width:980px;margin:-96px auto 40px;padding:0 18px;position:relative;z-index:2}
-		.letter{background:#fff;border:1px solid #ececec;border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.08);padding:24px;line-height:1.7}
-		.letter h2{margin:0 0 12px;font-family:'Patrick Hand',cursive;font-size:2rem}
-		.letter p{margin:0 0 14px;text-align:justify;text-justify:inter-word;hyphens:auto}
-		.sign{display:block;text-align:right;margin-top:8px;font-weight:700}
-		.letter-cta{text-align:center;margin-top:18px}
-		.letter-cta button{background:var(--primary);color:#fff;padding:10px 18px;border:none;border-radius:8px;cursor:pointer;font-weight:700}
-		@media(max-width:700px){.hero-title{font-size:2.2rem}.letter-wrap{margin:-48px auto 32px}}
-	</style>
+			.letter-wrap{max-width:980px;margin:-96px auto 40px;padding:0 18px;position:relative;z-index:2}
+			.letter{background:#fff;border:1px solid #ececec;border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.08);padding:24px;line-height:1.7}
+			.letter h2{margin:0 0 12px;font-family:'Patrick Hand',cursive;font-size:2rem}
+			.letter p{margin:0 0 14px;text-align:justify;text-justify:inter-word;hyphens:auto}
+			.sign{display:block;text-align:right;margin-top:8px;font-weight:700}
+			.letter-cta{text-align:center;margin-top:18px}
+			.letter-cta button{background:var(--primary);color:#fff;padding:10px 18px;border:none;border-radius:8px;cursor:pointer;font-weight:700}
+
+			/* Stories feed styles */
+			.site-nav{background:#fff;border-bottom:1px solid rgba(0,0,0,.04)}
+			.site-nav .nav-link{padding:12px 14px;color:inherit;text-decoration:none;font-family:'Inter',sans-serif;font-weight:500}
+			.site-nav .nav-link.active{color:var(--primary);font-weight:700}
+			.tagline-text{font-family:'Inter',sans-serif;font-size:1.05rem;color:#fff;text-align:center;padding:12px 16px;opacity:.95}
+			.stories-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+			@media(min-width:800px){.stories-grid{grid-template-columns:repeat(2,1fr)}}
+			.story-card{padding:14px;background:#fff;border-radius:10px;border:1px solid #eee}
+			.story-text{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;margin:0}
+			.story-text.expanded{display:block}
+			.story-author{margin-top:10px;font-weight:600;color:#333}
+			.story-actions{margin-top:10px}
+			.cta-block{padding:12px;background:#eaf5ff;border:1px solid #d5e6ff;border-radius:10px}
+			input[type=text], textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;font-family:'Inter',sans-serif}
+			textarea{min-height:120px}
+
+			@media(max-width:700px){.hero-headline{font-size:1.6rem}.hero-quote{font-size:1.1rem}.letter-wrap{margin:-48px auto 32px}.container{padding:0 12px}}
+		</style>
 </head>
 <body>
 	<header class="top-banner">
@@ -45,21 +63,115 @@
 		</div>
 	</header>
 
-	<section class="hero">
-		<div>
-			<img class="hero-logo" src="logo.png" alt="Logo Blue Lava">
-			<h1 class="hero-title">Bem-vindo à Comunidade Blue Lava</h1>
-			<p class="hero-sub">A comunidade de apoio, partilha e crescimento em saúde mental</p>
-			<div class="stat">⚠️ <strong>Estatística Nacional:</strong> 1 em cada 5 pessoas em Portugal sofre de uma perturbação (neurodivergência) mental.</div>
-			<p class="hero-quote">Alguém, em algum lugar, sente exatamente o que tu estás a sentir</p>
-			<div><button class="btn" id="enterBtn">Visitar a Comunidade</button></div>
+	<nav class="site-nav" aria-label="Main navigation">
+		<div class="container" style="display:flex;gap:12px;align-items:center;justify-content:center">
+			<a href="portal.html?tab=historias" class="nav-link active">Histórias</a>
+			<a href="portal.html?tab=compreender" class="nav-link">Compreender</a>
+			<a href="portal.html?tab=recursos" class="nav-link">Recursos</a>
+			<a href="portal.html?tab=origem" class="nav-link">Origem</a>
 		</div>
+	</nav>
+
+	<section class="tagline container">
+		<p class="tagline-text">Histórias reais. Pessoas reais.</p>
 	</section>
 
+	<main class="container">
+		<section id="storiesFeed" class="stories-grid"></section>
+
+		<div id="sharePanel" class="card" style="display:none;margin-top:18px">
+			<h2 style="margin-top:0">Partilhar a história</h2>
+			<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+				<input id="storyName" type="text" placeholder="O seu nome (opcional)">
+				<label style="display:inline-flex;align-items:center;gap:6px;margin-left:6px"><input id="storyAnon" type="checkbox"> Anónimo</label>
+			</div>
+			<textarea id="storyText" placeholder="Escreve a tua história..."></textarea>
+			<div style="text-align:right;margin-top:10px"><button id="submitStory" class="btn">Partilhar</button></div>
+		</div>
+	</main>
+
 	<script>
-		document.getElementById('enterBtn').addEventListener('click', function(){
-			window.location.href = 'community.html';
+	(function(){
+		const params = new URLSearchParams(window.location.search);
+		const preserveAnon = params.get('anon') === '1';
+
+		// preserve anon in site-nav links
+		function updateNav() {
+			document.querySelectorAll('.site-nav a').forEach(a => {
+				const href = a.getAttribute('href');
+				if (!href) return;
+				if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) return;
+				if (preserveAnon) {
+					a.href = href + (href.includes('?') ? '&anon=1' : '?anon=1');
+				}
+			});
+		}
+		updateNav();
+
+		function getStories(){ try { return JSON.parse(localStorage.getItem('bluelava_stories')||'[]'); } catch(e){ return []; } }
+		function saveStories(v){ localStorage.setItem('bluelava_stories', JSON.stringify(v)); }
+		function seedStories(){ if (getStories().length===0){
+			const now = Date.now();
+			const sample = [
+				{id: now+1, text: 'Há dias em que não sinto nada… e isso assusta mais do que sentir tudo.', name:'', anonymous:true, createdAt: now-86400000*2},
+				{id: now+2, text: 'Pedir ajuda foi a melhor decisão que tomei; encontrei apoio em pequenos passos.', name:'João', anonymous:false, createdAt: now-86400000},
+				{id: now+3, text: 'A medicação ajudou-me, mas a compreensão da família foi essencial.', name:'', anonymous:true, createdAt: now-43200000}
+			]; saveStories(sample);
+		}}
+
+		function escapeHtml(str){ return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/\n/g,'<br>'); }
+
+		function renderStories(){
+			const feed = document.getElementById('storiesFeed');
+			const stories = getStories().slice().sort((a,b)=>b.createdAt - a.createdAt);
+			feed.innerHTML = '';
+			if (stories.length===0) { feed.innerHTML = '<p>Seja o primeiro a partilhar.</p>'; }
+			stories.forEach((s,i)=>{
+				const card = document.createElement('article'); card.className='story-card card';
+				const expanded = s._expanded;
+				card.innerHTML = `
+					<p class="story-text ${expanded? 'expanded':''}" data-id="${s.id}">${escapeHtml(s.text)}</p>
+					<div class="story-author">— ${s.anonymous ? 'Anónimo' : (s.name||'Sem nome')}</div>
+					<div class="story-actions"><button class="read-more" data-id="${s.id}">${expanded? 'Ver menos' : 'Ler mais'}</button></div>
+				`;
+				feed.appendChild(card);
+				if ((i % 4) === 3) {
+					const cta = document.createElement('div'); cta.className='cta-block card';
+					cta.innerHTML = '<p style="margin:0 0 8px">Se te identificaste com isto…</p><div style="text-align:right"><button class="btn global-share">Partilhar a minha história</button></div>';
+					feed.appendChild(cta);
+				}
+			});
+			// append a CTA at end if few stories
+			if (stories.length>0 && stories.length<4) {
+				const cta = document.createElement('div'); cta.className='cta-block card';
+				cta.innerHTML = '<p style="margin:0 0 8px">Se te identificaste com isto…</p><div style="text-align:right"><button class="btn global-share">Partilhar a minha história</button></div>';
+				feed.appendChild(cta);
+			}
+
+			document.querySelectorAll('.read-more').forEach(btn=>{
+				btn.addEventListener('click', ()=>{
+					const id = Number(btn.dataset.id); toggleExpand(id);
+				});
+			});
+			document.querySelectorAll('.global-share').forEach(b=>b.addEventListener('click', showShare));
+		}
+
+		function toggleExpand(id){ const stories = getStories(); const it = stories.find(x=>x.id===id); if (!it) return; it._expanded = !it._expanded; saveStories(stories); renderStories(); }
+
+		function showShare(){ document.getElementById('sharePanel').style.display='block'; if (preserveAnon){ document.getElementById('storyAnon').checked = true; } window.scrollTo({top: document.getElementById('sharePanel').offsetTop-20, behavior:'smooth'}); }
+
+		document.getElementById('submitStory').addEventListener('click', function(){
+			const name = document.getElementById('storyName').value.trim();
+			const anonymous = document.getElementById('storyAnon').checked;
+			const text = document.getElementById('storyText').value.trim();
+			if (!text) return alert('Escreve a tua história.');
+			const stories = getStories(); stories.unshift({ id: Date.now(), name, anonymous, text, createdAt: Date.now() }); saveStories(stories);
+			document.getElementById('storyText').value=''; document.getElementById('storyName').value=''; document.getElementById('sharePanel').style.display='none'; renderStories();
 		});
+
+		seedStories(); renderStories();
+		window.showShare = showShare;
+	})();
 	</script>
 </body>
 </html>

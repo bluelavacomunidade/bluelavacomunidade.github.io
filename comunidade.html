@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BlueLava — Comunidade</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--primary:#4A90E2;--bg:#f4f7f6;--white:#fff;--text:#333}
+    html,body{height:100%;margin:0}
+    body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:var(--text);background:var(--bg)}
+    .header{background:linear-gradient(180deg,#000f2a,#2b4cb8);color:#fff;padding:18px 20px;text-align:center}
+    .header .title{font-weight:700;font-size:1.15rem}
+    .tabs{display:flex;gap:8px;padding:12px;justify-content:center;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.05);position:sticky;top:0;z-index:50}
+    .tab{padding:10px 16px;border-radius:8px;background:transparent;border:none;cursor:pointer;font-weight:600;color:#333}
+    .tab.active{background:var(--primary);color:#fff}
+    .frame-wrap{height:calc(100vh - 120px)}
+    .iframe-full{width:100%;height:100%;border:0;display:block}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="title">Comunidade Blue Lava</div>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Comunidade tabs">
+    <button class="tab" data-tab="historias">Histórias</button>
+    <button class="tab" data-tab="compreender">Compreender</button>
+    <button class="tab" data-tab="recursos">Recursos</button>
+    <button class="tab" data-tab="origem">A Origem</button>
+  </div>
+
+  <div class="frame-wrap">
+    <iframe id="tabFrame" class="iframe-full" src="index.html" title="Conteúdo da Comunidade"></iframe>
+  </div>
+
+  <script>
+  (function(){
+    const params = new URLSearchParams(window.location.search);
+    const preserveAnon = params.get('anon') === '1';
+    const tabs = document.querySelectorAll('.tab');
+    const frame = document.getElementById('tabFrame');
+
+    function srcFor(tab){
+      const map = {
+        historias: 'index.html',
+        compreender: '../index.html',
+        recursos: 'recursos.html',
+        origem: 'origem.html'
+      };
+      let src = map[tab] || map['historias'];
+      if (preserveAnon) src += (src.includes('?') ? '&anon=1' : '?anon=1');
+      return src;
+    }
+
+    function select(t){
+      tabs.forEach(x=>x.classList.toggle('active', x.dataset.tab===t));
+      frame.src = srcFor(t);
+    }
+
+    tabs.forEach(b=>b.addEventListener('click', ()=>select(b.dataset.tab)));
+
+    // default tab from query param or default to historias
+    const initial = (params.get('tab') || 'historias').toLowerCase();
+    // ensure active class on initial tab
+    const found = Array.from(tabs).some(x=>x.dataset.tab===initial);
+    select(found ? initial : 'historias');
+  })();
+  </script>
+
+</body>
+</html>
