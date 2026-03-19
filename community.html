@@ -24,6 +24,9 @@
     .stats-banner:hover .ticker-track{animation-play-state:paused}
     .tip{font-size:.96rem}
     @keyframes newsTicker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+    #chart-section{width:100%;background:linear-gradient(180deg,#fff,#f7fbff);padding:18px 0}
+    #chart-canvas{width:100%;max-width:980px;margin:0 auto;padding:0 16px;box-sizing:border-box}
+    #chart-canvas canvas{width:100% !important;height:360px !important;max-height:360px}
     nav{background:#fff;position:sticky;top:0;padding:8px 0;box-shadow:0 4px 10px rgba(0,0,0,.04);z-index:10}
     .site-nav .nav-link{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;min-height:44px;border-radius:999px;border:1px solid #dbe8ff;background:#f8fbff;color:#1f4f8f;text-decoration:none;font-family:'Inter',sans-serif;font-weight:700;transition:transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease}
     .site-nav .nav-link:hover{transform:translateY(-1px);box-shadow:0 8px 16px rgba(74,144,226,.18);background:#eef6ff}
@@ -48,6 +51,8 @@
     .saber-btn:hover{opacity:.95;transform:translateY(-2px)}
     @media(max-width:700px){
       .tip{font-size:.9rem}
+      #chart-canvas{padding:0 12px}
+      #chart-canvas canvas{height:300px !important;max-height:300px}
       .disorder-card{padding:14px 15px}
       .disorder-card h2{font-size:1.24rem}
       .disorder-card p{font-size:1rem;line-height:1.78;max-width:none}
@@ -92,6 +97,13 @@
       <a href="comunidade.html?tab=origem" class="nav-link">Origem</a>
     </div>
   </nav>
+
+  <section id="chart-section">
+    <div id="chart-canvas">
+      <canvas id="prevalenceChart" aria-label="Comparação estatística entre Portugal e o resto do mundo"></canvas>
+    </div>
+  </section>
+
   <main class="container">
     <section>
       <h2 style="color:#fff;font-size:1.35rem">Compreender as perturbações</h2>
@@ -100,6 +112,7 @@
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     // Keep embed hide behavior and preserve anon on internal links
     (function(){
@@ -126,6 +139,8 @@
           {
             id: 1,
             category: 'Stress',
+            prevalencePt: 25,
+            prevalenceWorld: 8,
             image: 'assets/images/stress-real.png',
             sourceLabel: 'APA - Stress effects on body',
             sourceUrl: 'https://www.apa.org/topics/stress/body',
@@ -139,6 +154,8 @@
           {
             id: 2,
             category: 'Ansiedade',
+            prevalencePt: 16.5,
+            prevalenceWorld: 4.4,
             image: 'assets/images/ansiedade-real.png',
             sourceLabel: 'NIMH - Anxiety Disorders',
             sourceUrl: 'https://www.nimh.nih.gov/health/topics/anxiety-disorders',
@@ -152,6 +169,8 @@
           {
             id: 3,
             category: 'Burnout',
+            prevalencePt: 10,
+            prevalenceWorld: 3,
             image: 'assets/images/burnout-real.png',
             sourceLabel: 'WHO - Burn-out (ICD-11)',
             sourceUrl: 'https://www.who.int/standards/classifications/frequently-asked-questions/burn-out-an-occupational-phenomenon',
@@ -165,6 +184,8 @@
           {
             id: 4,
             category: 'Depressão',
+            prevalencePt: 7.9,
+            prevalenceWorld: 5.7,
             image: 'assets/images/depressao-real.png',
             sourceLabel: 'WHO - Depressive disorder',
             sourceUrl: 'https://www.who.int/news-room/fact-sheets/detail/depression',
@@ -178,6 +199,8 @@
           {
             id: 5,
             category: 'Pânico',
+            prevalencePt: 4,
+            prevalenceWorld: 1.1,
             image: 'assets/images/panico-real.png',
             sourceLabel: 'NHS - Panic disorder',
             sourceUrl: 'https://www.nhs.uk/mental-health/conditions/panic-disorder/',
@@ -191,6 +214,8 @@
           {
             id: 6,
             category: 'TOC',
+            prevalencePt: 1.5,
+            prevalenceWorld: 1.2,
             image: 'assets/images/toc-real.png',
             sourceLabel: 'NIMH - Obsessive-Compulsive Disorder',
             sourceUrl: 'https://www.nimh.nih.gov/health/topics/obsessive-compulsive-disorder-ocd',
@@ -204,6 +229,8 @@
           {
             id: 7,
             category: 'Esquizofrenia',
+            prevalencePt: 0.43,
+            prevalenceWorld: 0.29,
             image: 'assets/images/esquizofrenia-real.png',
             sourceLabel: 'WHO - Schizophrenia',
             sourceUrl: 'https://www.who.int/news-room/fact-sheets/detail/schizophrenia',
@@ -217,6 +244,8 @@
           {
             id: 8,
             category: 'Autismo',
+            prevalencePt: 1.2,
+            prevalenceWorld: 1,
             image: 'assets/images/autismo-real.png',
             sourceLabel: 'NICE - Autism guideline',
             sourceUrl: 'https://www.nice.org.uk/guidance/cg170',
@@ -228,6 +257,39 @@
             ]
           }
         ];
+
+        const sortedDisorders = [...disorders].sort((a, b) => b.prevalencePt - a.prevalencePt);
+
+        function renderChart() {
+          const canvas = document.getElementById('prevalenceChart');
+          if (!canvas || typeof Chart === 'undefined') return;
+          const labels = sortedDisorders.map(item => item.category);
+          const ptData = sortedDisorders.map(item => item.prevalencePt);
+          const worldData = sortedDisorders.map(item => item.prevalenceWorld);
+          new Chart(canvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+              labels,
+              datasets: [{
+                label: 'Portugal (%)',
+                data: ptData,
+                backgroundColor: 'rgba(74, 144, 226, 0.85)'
+              }, {
+                label: 'Resto do mundo (%)',
+                data: worldData,
+                backgroundColor: 'rgba(22, 63, 138, 0.9)'
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: { y: { beginAtZero: true } },
+              plugins: { legend: { display: true } }
+            }
+          });
+        }
+
+        renderChart();
 
         const list = document.getElementById('disordersLongRead');
         if (list) {
