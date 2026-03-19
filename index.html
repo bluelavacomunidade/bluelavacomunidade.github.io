@@ -29,6 +29,11 @@
 		.stat{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:12px 18px;border-radius:12px}
 		.btn{margin-top:18px;background:var(--white);color:var(--primary);padding:11px 24px;border:none;border-radius:999px;font-weight:600;font-family:'Inter',sans-serif;text-transform:none;cursor:pointer}
 		.btn.global-share,.btn.submit-share{background:var(--primary);color:var(--white)}
+		body:not(.embedded) .news-feed,
+		body:not(.embedded) .site-nav,
+		body:not(.embedded) .tagline,
+		body:not(.embedded) main.container{display:none !important}
+		body.embedded .hero{display:none !important}
 
 			.letter-wrap{max-width:980px;margin:-96px auto 40px;padding:0 18px;position:relative;z-index:2}
 			.letter{background:#fff;border:1px solid #ececec;border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.08);padding:24px;line-height:1.7}
@@ -82,6 +87,17 @@
 		</div>
 	</header>
 
+	<section class="hero">
+		<div>
+			<img class="hero-logo" src="logo.png" alt="Logo Blue Lava">
+			<h1 class="hero-title">Bem-vindo à Comunidade Blue Lava</h1>
+			<p class="hero-sub">A comunidade de apoio, partilha e crescimento em saúde mental</p>
+			<div class="stat">⚠️ <strong>Estatística Nacional:</strong> 1 em cada 5 pessoas em Portugal vive com uma perturbação de saúde mental.</div>
+			<p class="hero-quote">Alguém, em algum lugar, sente exatamente o que tu estás a sentir</p>
+			<div><button class="btn" id="enterBtn">Visitar a Comunidade</button></div>
+		</div>
+	</section>
+
 	<div class="news-feed" role="region" aria-label="Dicas rápidas para manter a calma">
 		<div class="news-feed-track">
 			<span class="news-tip">🫁 Pânico: inspira 4 segundos e expira 6 segundos, devagar.</span>
@@ -130,6 +146,15 @@
 		const preserveAnon = params.get('anon') === '1';
 
 		if (embed) document.body.classList.add('embedded');
+		if (!embed) {
+			const enterBtn = document.getElementById('enterBtn');
+			if (enterBtn) {
+				enterBtn.addEventListener('click', function(){
+					window.location.href = `comunidade.html?tab=historias${preserveAnon ? '&anon=1' : ''}`;
+				});
+			}
+			return;
+		}
 
 		// preserve anon in site-nav links only when not embedded
 		function updateNav() {
