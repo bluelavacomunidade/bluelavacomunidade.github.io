@@ -18,19 +18,27 @@
       background-attachment:fixed,fixed,fixed;
     }
     header{background:linear-gradient(180deg,#000f2a,#2b4cb8);color:#fff;padding:20px;text-align:center}
-    .stats-banner{background:var(--accent);color:#fff;padding:10px 0;font-weight:700;overflow:hidden}
-    .ticker{display:flex;overflow:auto;white-space:nowrap}
-    .ticker-track{display:inline-flex;align-items:center;gap:30px;padding-right:30px;min-width:max-content}
+    .stats-banner{background:var(--accent);color:#fff;padding:10px 0;font-weight:700;overflow:hidden;position:relative}
+    .ticker{display:block;overflow:hidden;white-space:nowrap}
+    .ticker-track{display:inline-flex;align-items:center;gap:30px;padding-right:30px;min-width:max-content;animation:newsTicker 50s linear infinite;will-change:transform}
+    .stats-banner:hover .ticker-track{animation-play-state:paused}
     .tip{font-size:.96rem}
-    #chart-section{width:100%;background:linear-gradient(180deg,#fff,#f7fbff);padding:18px 0}
-    #chart-canvas{width:100%;max-width:980px;margin:0 auto;padding:0 16px;box-sizing:border-box}
+    @keyframes newsTicker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
     nav{background:#fff;position:sticky;top:0;padding:8px 0;box-shadow:0 4px 10px rgba(0,0,0,.04);z-index:10}
-    nav .container a{font-family:'Inter',sans-serif;font-weight:500;text-transform:none;margin-right:12px;color:inherit}
+    .site-nav .nav-link{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid #dbe8ff;background:#f8fbff;color:#1f4f8f;text-decoration:none;font-family:'Inter',sans-serif;font-weight:700;transition:transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease}
+    .site-nav .nav-link:hover{transform:translateY(-1px);box-shadow:0 8px 16px rgba(74,144,226,.18);background:#eef6ff}
+    .site-nav .nav-link:focus-visible{outline:2px solid #1f4f8f;outline-offset:2px}
+    .site-nav .nav-link.active{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 8px 18px rgba(74,144,226,.28)}
     .container{max-width:1100px;margin:20px auto;padding:0 18px}
     .posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
     .post-card{background:#fff;border-radius:10px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.05);cursor:pointer;border:1px solid #f0f0f0}
+    .disorder-list{display:grid;grid-template-columns:1fr;gap:16px}
+    .disorder-card{background:#fff;border-radius:12px;padding:16px;border:1px solid #ececec;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+    .disorder-card h2{margin:8px 0 10px;font-size:1.25rem}
+    .disorder-card p{margin:0 0 12px;color:#222}
     .post-title{font-family:'Inter',sans-serif;font-weight:700;margin:6px 0;font-size:1.1rem}
     .post-portugal{color:var(--primary);font-weight:600}
+    .post-thumb{width:100%;height:170px;object-fit:cover;border-radius:8px;margin-bottom:10px}
     .source{font-size:.88rem;color:#555;margin-top:8px}
     .simple{margin-top:8px;padding:8px 10px;background:#f3f8ff;border:1px solid #d5e6ff;border-radius:8px;font-size:.92rem}
     .social-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;background:#000;color:#fff;text-decoration:none;box-shadow:0 4px 10px rgba(0,0,0,.28);transition:transform .15s ease,opacity .15s ease}
@@ -38,7 +46,7 @@
     .social-btn i{font-size:18px}
     .saber-btn{display:inline-block;margin-top:10px;padding:8px 12px;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-family:'Inter',sans-serif}
     .saber-btn:hover{opacity:.95;transform:translateY(-2px)}
-    @media(max-width:700px){#chart-canvas{padding:0 12px}.ticker-track{animation-duration:160s}.tip{font-size:.9rem}}
+    @media(max-width:700px){.tip{font-size:.9rem}}
   </style>
 </head>
 <body>
@@ -52,15 +60,6 @@
       </div>
     </div>
   </header>
-
-  <nav class="site-nav" aria-label="Main navigation">
-    <div class="container" style="display:flex;gap:12px;align-items:center;justify-content:center">
-      <a href="portal.html?tab=historias" class="nav-link">Histórias</a>
-      <a href="portal.html?tab=compreender" class="nav-link active">Compreender</a>
-      <a href="portal.html?tab=recursos" class="nav-link">Recursos</a>
-      <a href="portal.html?tab=origem" class="nav-link">Origem</a>
-    </div>
-  </nav>
 
   <div class="stats-banner" role="region" aria-label="Dicas rápidas de saúde mental com fontes fidedignas">
     <div class="ticker">
@@ -78,20 +77,20 @@
     </div>
   </div>
 
-  <section id="chart-section">
-    <div id="chart-canvas">
-      <canvas id="prevalenceChart"></canvas>
+  <nav class="site-nav" aria-label="Main navigation">
+    <div class="container" style="display:flex;gap:12px;align-items:center;justify-content:center">
+      <a href="comunidade.html?tab=historias" class="nav-link">Histórias</a>
+      <a href="comunidade.html?tab=compreender" class="nav-link active">Compreender</a>
+      <a href="comunidade.html?tab=recursos" class="nav-link">Recursos</a>
+      <a href="comunidade.html?tab=origem" class="nav-link">Origem</a>
     </div>
-  </section>
+  </nav>
   <main class="container">
-    <article class="post-card" style="max-width:900px;margin:20px auto">
-      <img src="assets/images/stress-real.png" alt="Stress" style="width:100%;height:260px;object-fit:cover;border-radius:8px;margin-bottom:12px">
-      <h2 class="post-title">Stress</h2>
-      <div class="post-portugal">Resposta física e emocional a sobrecarga — comum em contextos de trabalho e vida pessoal com alta pressão.</div>
-      <div style="margin-top:12px"><strong>Definição:</strong> Stress psicológico é uma resposta adaptativa do organismo a exigências percebidas como superiores aos recursos disponíveis. Em exposição prolongada, associa-se a pior saúde mental e física.</div>
-      <div style="margin-top:12px"><strong>Explicação simples:</strong> No dia a dia, pode sentir-se como viver em modo de urgência constante: irritação, tensão muscular, fadiga e dificuldade em desligar ou recuperar energia.</div>
-      <div class="source" style="margin-top:14px">Fonte científica: <a href="https://www.apa.org/topics/stress/body" target="_blank" rel="noopener noreferrer">APA - Stress effects on body</a></div>
-    </article>
+    <section>
+      <h2 style="color:#fff;font-size:1.35rem">Compreender as perturbações</h2>
+      <p style="color:#fff;opacity:.92;margin-top:4px">Cada secção abaixo inclui explicação em 4 parágrafos e ligação para a fonte científica.</p>
+      <div id="disordersLongRead" class="disorder-list" style="margin-top:12px"></div>
+    </section>
   </main>
 
   <script>
@@ -114,6 +113,129 @@
               a.href = href + (href.includes('?') ? '&' : '?') + 'anon=1';
             } catch (e) {}
           });
+        }
+
+        const disorders = [
+          {
+            id: 1,
+            category: 'Stress',
+            image: 'assets/images/stress-real.png',
+            sourceLabel: 'APA - Stress effects on body',
+            sourceUrl: 'https://www.apa.org/topics/stress/body',
+            paragraphs: [
+              'O stress é uma resposta biológica e psicológica normal quando o cérebro interpreta uma exigência como ameaça ou pressão elevada. Em doses curtas pode ajudar no foco e desempenho, mas quando se prolonga deixa de ser adaptativo.',
+              'No organismo, o stress ativa o sistema nervoso simpático e o eixo hipotálamo-hipófise-adrenal, com libertação de adrenalina e cortisol. Esta ativação contínua relaciona-se com alterações de sono, tensão muscular, cansaço persistente e maior irritabilidade.',
+              'A evidência mostra associação entre stress crónico e risco aumentado de problemas cardiovasculares, dores crónicas, ansiedade e sintomas depressivos. Também pode reduzir a capacidade de concentração e de tomada de decisão no dia a dia.',
+              'A gestão eficaz combina estratégias de regulação fisiológica (respiração lenta, pausas, atividade física), ajustes no ambiente (limites, organização de tarefas) e apoio clínico quando os sintomas são persistentes ou incapacitantes.'
+            ]
+          },
+          {
+            id: 2,
+            category: 'Ansiedade',
+            image: 'assets/images/ansiedade-real.png',
+            sourceLabel: 'NIMH - Anxiety Disorders',
+            sourceUrl: 'https://www.nimh.nih.gov/health/topics/anxiety-disorders',
+            paragraphs: [
+              'As perturbações de ansiedade envolvem medo e preocupação excessivos, difíceis de controlar e desproporcionais ao risco real. Não se tratam apenas de “nervosismo”, mas de um padrão clínico com impacto funcional.',
+              'Os sintomas podem incluir inquietação, hipervigilância, tensão muscular, palpitações, desconforto gastrointestinal e dificuldade de sono. Em muitos casos surge evitamento de situações, o que alivia no curto prazo, mas mantém o problema a longo prazo.',
+              'Do ponto de vista científico, há interação entre predisposição genética, fatores ambientais e alterações em circuitos cerebrais ligados ao medo e à regulação emocional. Por isso, a ansiedade pode aparecer mesmo sem um perigo objetivo imediato.',
+              'Tratamentos com maior suporte de evidência incluem terapia cognitivo-comportamental e, quando indicado, farmacoterapia. Técnicas complementares de grounding, respiração e rotina de sono ajudam a reduzir recaídas.'
+            ]
+          },
+          {
+            id: 3,
+            category: 'Burnout',
+            image: 'assets/images/burnout-real.png',
+            sourceLabel: 'WHO - Burn-out (ICD-11)',
+            sourceUrl: 'https://www.who.int/standards/classifications/frequently-asked-questions/burn-out-an-occupational-phenomenon',
+            paragraphs: [
+              'O burnout é descrito pela OMS como um fenómeno ocupacional associado a stress crónico no trabalho que não foi gerido com sucesso. Não é apenas cansaço; envolve uma síndrome com padrões claros.',
+              'As três dimensões mais reconhecidas são exaustão, distanciamento mental/cinismo em relação ao trabalho e diminuição da eficácia profissional. Muitas pessoas também relatam alterações de sono, irritabilidade e redução de motivação.',
+              'Em contexto prolongado, o burnout aumenta risco de absentismo, queda de desempenho e agravamento da saúde mental. A literatura reforça que fatores organizacionais (carga, autonomia, suporte, reconhecimento) têm peso central no problema.',
+              'A recuperação exige mudanças individuais e estruturais: redefinição de limites, pausa real, reorganização de tarefas, apoio clínico quando necessário e políticas de trabalho que reduzam exposição crónica à sobrecarga.'
+            ]
+          },
+          {
+            id: 4,
+            category: 'Depressão',
+            image: 'assets/images/depressao-real.png',
+            sourceLabel: 'WHO - Depressive disorder',
+            sourceUrl: 'https://www.who.int/news-room/fact-sheets/detail/depression',
+            paragraphs: [
+              'A depressão é uma condição de saúde mental com humor persistentemente deprimido e/ou perda de interesse por atividades que antes davam prazer. O impacto vai além da tristeza pontual e compromete funcionamento social, académico e laboral.',
+              'Sintomas comuns incluem fadiga, alterações de sono e apetite, lentificação ou agitação psicomotora, dificuldades cognitivas e sentimentos de culpa ou desesperança. Em casos moderados a graves, pode existir risco suicidário.',
+              'A etiologia é multifatorial, combinando fatores biológicos, psicológicos e sociais. Eventos adversos, doenças médicas, isolamento e vulnerabilidades prévias podem contribuir para o início e manutenção do quadro.',
+              'As abordagens de primeira linha incluem psicoterapia estruturada, intervenção psicossocial e medicação quando clinicamente indicada. Deteção precoce, continuidade terapêutica e rede de suporte aumentam significativamente o prognóstico.'
+            ]
+          },
+          {
+            id: 5,
+            category: 'Pânico',
+            image: 'assets/images/panico-real.png',
+            sourceLabel: 'NHS - Panic disorder',
+            sourceUrl: 'https://www.nhs.uk/mental-health/conditions/panic-disorder/',
+            paragraphs: [
+              'A perturbação de pânico caracteriza-se por ataques súbitos de medo intenso que atingem rapidamente um pico de sintomas físicos e cognitivos. Muitas pessoas descrevem sensação de perda de controlo ou medo de morrer durante o episódio.',
+              'Durante a crise podem surgir taquicardia, falta de ar, tremor, suor, tontura, dor torácica e desrealização. Como os sintomas são intensos, é comum confundir ataques de pânico com emergência médica nas primeiras ocorrências.',
+              'Após os ataques, pode instalar-se medo persistente de novas crises e evitamento de locais ou atividades. Esse ciclo de medo do medo tende a reforçar o problema e reduzir qualidade de vida.',
+              'Intervenções com evidência incluem terapia cognitivo-comportamental com técnicas de exposição e treino respiratório. Em alguns casos, farmacoterapia é útil como parte de um plano terapêutico individualizado.'
+            ]
+          },
+          {
+            id: 6,
+            category: 'TOC',
+            image: 'assets/images/toc-real.png',
+            sourceLabel: 'NIMH - Obsessive-Compulsive Disorder',
+            sourceUrl: 'https://www.nimh.nih.gov/health/topics/obsessive-compulsive-disorder-ocd',
+            paragraphs: [
+              'O transtorno obsessivo-compulsivo envolve obsessões (pensamentos, imagens ou impulsos intrusivos) e compulsões (rituais comportamentais ou mentais) que a pessoa sente necessidade de executar para aliviar ansiedade.',
+              'Embora o alívio seja temporário, a repetição reforça o ciclo obsessão-compulsão. Com o tempo, os rituais podem ocupar horas do dia e gerar prejuízo significativo em estudo, trabalho e relações pessoais.',
+              'A investigação aponta para interação entre fatores genéticos, aprendizagem e circuitos fronto-estriatais relacionados com inibição comportamental e monitorização de erro. Isso ajuda a explicar por que o controlo voluntário é tão difícil.',
+              'O tratamento de referência é terapia com Exposição e Prevenção de Resposta (EPR/ERP), frequentemente combinada com medicação serotoninérgica quando necessário. Psicoeducação familiar também melhora adesão e resultados.'
+            ]
+          },
+          {
+            id: 7,
+            category: 'Esquizofrenia',
+            image: 'assets/images/esquizofrenia-real.png',
+            sourceLabel: 'WHO - Schizophrenia',
+            sourceUrl: 'https://www.who.int/news-room/fact-sheets/detail/schizophrenia',
+            paragraphs: [
+              'A esquizofrenia é uma perturbação mental grave e heterogénea que pode envolver sintomas positivos (alucinações e delírios), sintomas negativos (apatia, retraimento) e alterações cognitivas.',
+              'O início é mais frequente no final da adolescência e início da idade adulta, com evolução variável. Algumas pessoas têm episódios com remissão parcial, enquanto outras necessitam de acompanhamento contínuo e suporte funcional intensivo.',
+              'A condição resulta de múltiplos fatores, incluindo vulnerabilidade biológica e componentes ambientais. O estigma social e a exclusão são fatores que pioram resultados clínicos e qualidade de vida.',
+              'Intervenção eficaz combina antipsicóticos, reabilitação psicossocial, apoio familiar e cuidados comunitários. Planos terapêuticos personalizados aumentam autonomia, adesão ao tratamento e integração social.'
+            ]
+          },
+          {
+            id: 8,
+            category: 'Autismo',
+            image: 'assets/images/autismo-real.png',
+            sourceLabel: 'NICE - Autism guideline',
+            sourceUrl: 'https://www.nice.org.uk/guidance/cg170',
+            paragraphs: [
+              'O autismo é uma condição do neurodesenvolvimento caracterizada por diferenças persistentes na comunicação e interação social, bem como por padrões restritos e repetitivos de comportamento, interesses ou atividades.',
+              'A apresentação clínica é diversa: há pessoas com elevada necessidade de suporte e outras com grande autonomia. Diferenças sensoriais (sons, luz, texturas) e necessidade de previsibilidade são frequentes.',
+              'A evidência atual enfatiza avaliação multidisciplinar e abordagem individualizada ao longo do ciclo de vida. O objetivo não é “normalizar” a pessoa, mas promover bem-estar, funcionalidade e participação social.',
+              'As melhores práticas incluem adaptações ambientais, suporte educacional e ocupacional, intervenções focadas em comunicação e regulação emocional, além de apoio às famílias e combate ao estigma.'
+            ]
+          }
+        ];
+
+        const list = document.getElementById('disordersLongRead');
+        if (list) {
+          list.innerHTML = disorders.map(item => {
+            const detailHref = `perturbacao.html?id=${item.id}${preserveAnon ? '&anon=1' : ''}`;
+            return `
+              <article class="disorder-card" id="disorder-${item.id}">
+                <img src="${item.image}" alt="${item.category}" class="post-thumb" style="height:220px">
+                <h2>${item.category}</h2>
+                ${item.paragraphs.map(p => `<p>${p}</p>`).join('')}
+                <p class="source"><strong>Fonte científica:</strong> <a href="${item.sourceUrl}" target="_blank" rel="noopener noreferrer">${item.sourceLabel}</a></p>
+                <div style="margin-top:10px"><a class="saber-btn" href="${detailHref}">Saber mais</a></div>
+              </article>
+            `;
+          }).join('');
         }
       }catch(e){}
     })();
