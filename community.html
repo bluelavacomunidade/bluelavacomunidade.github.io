@@ -83,28 +83,19 @@
       <canvas id="prevalenceChart"></canvas>
     </div>
   </section>
-
-  <nav>
-    <div class="container" style="display:flex;gap:12px;align-items:center;overflow:auto">
-      <a href="index.html" style="font-weight:700;cursor:pointer">Histórias</a>
-      <a onclick="filterPosts('Stress')" style="cursor:pointer">Stress</a>
-      <a onclick="filterPosts('Ansiedade')" style="cursor:pointer">Ansiedade</a>
-      <a onclick="filterPosts('Burnout')" style="cursor:pointer">Burnout</a>
-      <a onclick="filterPosts('Depressão')" style="cursor:pointer">Depressão</a>
-      <a onclick="filterPosts('Pânico')" style="cursor:pointer">Pânico</a>
-      <a onclick="filterPosts('TOC')" style="cursor:pointer">TOC</a>
-      <a onclick="filterPosts('Esquizofrenia')" style="cursor:pointer">Esquizofrenia</a>
-      <a onclick="filterPosts('Autismo')" style="cursor:pointer">Autismo</a>
-    </div>
-  </nav>
-
   <main class="container">
-    <div id="posts-grid" class="posts-grid"></div>
+    <article class="post-card" style="max-width:900px;margin:20px auto">
+      <img src="assets/images/stress-real.png" alt="Stress" style="width:100%;height:260px;object-fit:cover;border-radius:8px;margin-bottom:12px">
+      <h2 class="post-title">Stress</h2>
+      <div class="post-portugal">Resposta física e emocional a sobrecarga — comum em contextos de trabalho e vida pessoal com alta pressão.</div>
+      <div style="margin-top:12px"><strong>Definição:</strong> Stress psicológico é uma resposta adaptativa do organismo a exigências percebidas como superiores aos recursos disponíveis. Em exposição prolongada, associa-se a pior saúde mental e física.</div>
+      <div style="margin-top:12px"><strong>Explicação simples:</strong> No dia a dia, pode sentir-se como viver em modo de urgência constante: irritação, tensão muscular, fadiga e dificuldade em desligar ou recuperar energia.</div>
+      <div class="source" style="margin-top:14px">Fonte científica: <a href="https://www.apa.org/topics/stress/body" target="_blank" rel="noopener noreferrer">APA - Stress effects on body</a></div>
+    </article>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // If this page is loaded inside the hub (embed=1), hide its top header/nav
+    // Keep embed hide behavior and preserve anon on internal links
     (function(){
       try{
         const params = new URLSearchParams(window.location.search);
@@ -113,181 +104,19 @@
           style.innerHTML = 'header, nav.site-nav, .stats-banner { display: none !important; } body { padding-top: 0 !important; }';
           document.head.appendChild(style);
         }
+        const preserveAnon = params.get('anon') === '1';
+        if (preserveAnon) {
+          document.querySelectorAll('.site-nav a, nav .container a[href]').forEach(a => {
+            try {
+              const href = a.getAttribute('href');
+              if (!href) return;
+              if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) return;
+              a.href = href + (href.includes('?') ? '&' : '?') + 'anon=1';
+            } catch (e) {}
+          });
+        }
       }catch(e){}
     })();
-
-    const disorders = [
-      {
-        id: 1,
-        category: 'Stress',
-        prevalencePt: 25,
-        prevalenceWorld: 8,
-        image: 'assets/images/stress-real.png',
-        shortDescription: 'Resposta física e emocional a sobrecarga, comum em contextos de trabalho de alta pressão.',
-        definition: 'Stress psicológico é uma resposta adaptativa do organismo a exigências percebidas como superiores aos recursos disponíveis. Em exposição prolongada, associa-se a pior saúde mental e física.',
-        simpleExplanation: 'No dia a dia, pode sentir-se como viver em modo de urgência constante: irritação, tensão muscular, fadiga e pouca capacidade para desligar.',
-        sourceLabel: 'APA - Stress effects on body',
-        sourceUrl: 'https://www.apa.org/topics/stress/body'
-      },
-      {
-        id: 2,
-        category: 'Ansiedade',
-        prevalencePt: 16.5,
-        prevalenceWorld: 4.4,
-        image: 'assets/images/ansiedade-real.png',
-        shortDescription: 'Preocupação excessiva, persistente e difícil de controlar, com sintomas físicos associados.',
-        definition: 'As perturbações de ansiedade incluem medo e preocupação desproporcionais, hipervigilância e sintomas somáticos (por exemplo, palpitações e tensão), com impacto funcional relevante.',
-        simpleExplanation: 'Pode parecer que a mente não para: preocupação com tudo, sensação de aperto no peito e dificuldade em relaxar mesmo quando não há perigo imediato.',
-        sourceLabel: 'NIMH - Anxiety Disorders',
-        sourceUrl: 'https://www.nimh.nih.gov/health/topics/anxiety-disorders'
-      },
-      {
-        id: 3,
-        category: 'Burnout',
-        prevalencePt: 10,
-        prevalenceWorld: 3,
-        image: 'assets/images/burnout-real.png',
-        shortDescription: 'Exaustão ligada ao trabalho, com distanciamento emocional e menor eficácia profissional.',
-        definition: 'Burnout é uma síndrome associada ao stress crónico no trabalho, marcada por exaustão, cinismo/distanciamento e redução de eficácia profissional.',
-        simpleExplanation: 'É como chegar ao fim do dia “vazio”: pouca energia, desmotivação no trabalho e sensação de que tarefas simples se tornaram pesadas.',
-        sourceLabel: 'WHO - Burn-out (ICD-11)',
-        sourceUrl: 'https://www.who.int/standards/classifications/frequently-asked-questions/burn-out-an-occupational-phenomenon'
-      },
-      {
-        id: 4,
-        category: 'Depressão',
-        prevalencePt: 7.9,
-        prevalenceWorld: 5.7,
-        image: 'assets/images/depressao-real.png',
-        shortDescription: 'Humor deprimido persistente, perda de interesse e alterações de sono, energia e concentração.',
-        definition: 'A depressão é uma perturbação (neurodivergência) mental com tristeza persistente e/ou anedonia, frequentemente acompanhada por alterações do sono, apetite, energia, cognição e risco suicidário.',
-        simpleExplanation: 'No quotidiano, pode surgir como tristeza contínua, falta de vontade para atividades antes prazerosas e sensação de vazio ou desesperança.',
-        sourceLabel: 'WHO - Depressive disorder',
-        sourceUrl: 'https://www.who.int/news-room/fact-sheets/detail/depression'
-      },
-      {
-        id: 5,
-        category: 'Pânico',
-        prevalencePt: 4,
-        prevalenceWorld: 1.1,
-        image: 'assets/images/panico-real.png',
-        shortDescription: 'Ataques súbitos de medo intenso com sintomas físicos marcantes.',
-        definition: 'A perturbação (neurodivergência) de pânico caracteriza-se por ataques de pânico inesperados e recorrentes, seguidos de preocupação persistente com novos ataques e alterações comportamentais.',
-        simpleExplanation: 'Pode acontecer de repente: coração acelerado, falta de ar, tremores e medo de perder o controlo, mesmo sem uma ameaça real naquele momento.',
-        sourceLabel: 'NHS - Panic disorder',
-        sourceUrl: 'https://www.nhs.uk/mental-health/conditions/panic-disorder/'
-      },
-      {
-        id: 6,
-        category: 'TOC',
-        prevalencePt: 1.5,
-        prevalenceWorld: 1.2,
-        image: 'assets/images/toc-real.png',
-        shortDescription: 'Obsessões intrusivas e compulsões repetitivas para reduzir ansiedade.',
-        definition: 'A perturbação (neurodivergência) obsessivo-compulsiva envolve obsessões (pensamentos intrusivos) e/ou compulsões (rituais), clinicamente significativos e com prejuízo funcional.',
-        simpleExplanation: 'Pode parecer uma necessidade difícil de travar de verificar, ordenar ou repetir ações para aliviar ansiedade, mesmo que isso desgaste a rotina.',
-        sourceLabel: 'NIMH - Obsessive-Compulsive Disorder',
-        sourceUrl: 'https://www.nimh.nih.gov/health/topics/obsessive-compulsive-disorder-ocd'
-      },
-      {
-        id: 7,
-        category: 'Esquizofrenia',
-        prevalencePt: 0.43,
-        prevalenceWorld: 0.29,
-        image: 'assets/images/esquizofrenia-real.png',
-        shortDescription: 'Perturbação (neurodivergência) grave com possíveis alucinações, delírios e desorganização do pensamento.',
-        definition: 'A esquizofrenia é uma perturbação (neurodivergência) mental grave, heterogénea, com sintomas psicóticos e alterações cognitivas/funcionais que exigem acompanhamento clínico contínuo.',
-        simpleExplanation: 'Na prática, a pessoa pode viver experiências muito intensas e reais para si (como ouvir vozes) e precisar de apoio clínico regular e suporte social.',
-        sourceLabel: 'WHO - Schizophrenia',
-        sourceUrl: 'https://www.who.int/news-room/fact-sheets/detail/schizophrenia'
-      },
-      {
-        id: 8,
-        category: 'Autismo',
-        prevalencePt: 1.2,
-        prevalenceWorld: 1,
-        image: 'assets/images/autismo-real.png',
-        shortDescription: 'Condição do neurodesenvolvimento com diferenças na comunicação social e padrões de comportamento restritos e repetitivos.',
-        definition: 'Segundo a ICD-11 da OMS (6A02), o autismo é uma condição do neurodesenvolvimento caracterizada por dificuldades persistentes na comunicação e interação social recíproca, e por padrões restritos, repetitivos e inflexíveis de comportamento, interesses ou atividades.',
-        simpleExplanation: 'No quotidiano, pode traduzir-se em formas próprias de comunicar, necessidade de rotinas previsíveis e maior sensibilidade sensorial (sons, luzes, texturas), com perfis muito diferentes entre pessoas.',
-        sourceLabel: 'NICE (Europa) CG170 + referência ICD-11 da OMS',
-        sourceUrl: 'https://www.nice.org.uk/guidance/cg170'
-      }
-    ];
-
-    const sortedDisorders = [...disorders].sort((a, b) => b.prevalencePt - a.prevalencePt);
-    const preserveAnon = new URLSearchParams(window.location.search).get('anon') === '1';
-
-    let prevalenceChart;
-    function renderChart() {
-      const labels = sortedDisorders.map(item => item.category);
-      const ptData = sortedDisorders.map(item => item.prevalencePt);
-      const worldData = sortedDisorders.map(item => item.prevalenceWorld);
-      const ctx = document.getElementById('prevalenceChart').getContext('2d');
-      if (prevalenceChart) prevalenceChart.destroy();
-      prevalenceChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Portugal (%)',
-            data: ptData,
-            backgroundColor: 'rgba(74, 144, 226, 0.85)'
-          }, {
-            label: 'Resto do mundo (%)',
-            data: worldData,
-            backgroundColor: 'rgba(22, 63, 138, 0.9)'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: { y: { beginAtZero: true } },
-          plugins: { legend: { display: true } }
-        }
-      });
-    }
-
-    // Preserve anon across internal site-nav links and this page's Histórias link
-    if (preserveAnon) {
-      document.querySelectorAll('.site-nav a, nav .container a[href]').forEach(a => {
-        try {
-          const href = a.getAttribute('href');
-          if (!href) return;
-          if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) return;
-          a.href = href + (href.includes('?') ? '&anon=1' : '?anon=1');
-        } catch (e) {}
-      });
-    }
-
-    function filterPosts(category) {
-      const grid = document.getElementById('posts-grid');
-      grid.innerHTML = '';
-      const filtered = category === 'all'
-        ? sortedDisorders
-        : sortedDisorders.filter(item => item.category === category);
-
-      filtered.forEach(item => {
-        grid.innerHTML += `
-          <article class="post-card" onclick="openDisorder(${item.id})">
-            <img src="${item.image}" alt="${item.category}" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:10px">
-            <div class="post-title">${item.category}</div>
-            <div class="post-portugal">🇵🇹 ${item.prevalencePt}% da população portuguesa</div>
-            <div>${item.shortDescription}</div>
-            <div class="simple"><strong>Explicação simples:</strong> ${item.simpleExplanation}</div>
-            <div class="source">Fonte científica: <a href="${item.sourceUrl}" target="_blank" rel="noopener noreferrer">${item.sourceLabel}</a></div>
-            <div style="margin-top:10px"><a class="saber-btn" href="perturbacao.html?id=${item.id}${preserveAnon ? '&anon=1' : ''}">Saber mais</a></div>
-          </article>
-        `;
-      });
-    }
-
-    function openDisorder(id) {
-      window.location.href = `perturbacao.html?id=${id}${preserveAnon ? '&anon=1' : ''}`;
-    }
-
-    renderChart();
-    filterPosts('all');
   </script>
 </body>
 </html>
