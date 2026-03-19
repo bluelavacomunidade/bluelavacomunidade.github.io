@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BlueLava - Histórias</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--primary:#4A90E2;--white:#fff;--text:#333}
+    html,body{margin:0;color:var(--text);font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.6;background-color:#0b1f3d;background-image:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),url('assets/images/background-fixed.jpg'),url('assets/images/background website.jpeg');background-repeat:no-repeat,no-repeat,no-repeat;background-position:center center,center center,center center;background-size:cover,cover,cover;background-attachment:fixed,fixed,fixed}
+    .top-banner{background:linear-gradient(180deg,#000f2a,#2b4cb8);color:#fff;padding:14px 16px}
+    .top-banner-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+    .banner-title{font-weight:700;font-size:1.05rem}
+    .social-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;background:#000;color:#fff;text-decoration:none;box-shadow:0 4px 10px rgba(0,0,0,.28);transition:transform .15s ease,opacity .15s ease}
+    .social-btn:hover{transform:translateY(-1px);opacity:.92}
+    .social-btn i{font-size:18px}
+    .news-feed{background:#ff6f3d;color:#fff;padding:10px 0;overflow:hidden;white-space:nowrap;position:relative}
+    .news-feed-track{display:inline-flex;align-items:center;gap:28px;min-width:max-content;padding:0 16px;animation:newsTicker 90s linear infinite;will-change:transform}
+    .news-feed:hover .news-feed-track{animation-play-state:paused}
+    .news-tip{font-size:.94rem;font-weight:600}
+    @keyframes newsTicker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+    .site-nav{background:#fff;border-bottom:1px solid rgba(0,0,0,.04)}
+    .site-nav .nav-link{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;min-height:44px;border-radius:999px;border:1px solid #dbe8ff;background:#f8fbff;color:#1f4f8f;text-decoration:none;font-weight:700;transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease}
+    .site-nav .nav-link:hover{transform:translateY(-1px);box-shadow:0 8px 16px rgba(74,144,226,.18);background:#eef6ff}
+    .site-nav .nav-link:focus-visible{outline:2px solid #1f4f8f;outline-offset:2px}
+    .site-nav .nav-link.active{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 8px 18px rgba(74,144,226,.28)}
+    .container{max-width:980px;margin:20px auto;padding:0 16px}
+    .tagline-text{font-size:1.05rem;color:#fff;text-align:center;padding:12px 16px;opacity:.95}
+    .stories-feed{display:grid;grid-template-columns:1fr;gap:14px}
+    .card{background:#fff;border:1px solid #ececec;border-radius:10px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+    .story-card{margin:0 0 4px}
+    .story-text{margin:0;color:#222;white-space:pre-wrap}
+    .story-author{margin-top:10px;font-weight:600;color:#444}
+    .reactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .reaction-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid #e0e0e0;background:#f8fafc;cursor:pointer;font-weight:700}
+    .reaction-btn:hover{background:#eef6ff;border-color:#cfe2ff}
+    .cta-block{background:#eaf5ff;border-color:#d5e6ff}
+    .cta-copy{white-space:pre-wrap;font-size:.98rem;color:#153c73;margin:0 0 10px}
+    .cta-block textarea,.share-panel textarea,.share-panel input[type=text]{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;font-family:'Inter',sans-serif}
+    .cta-block textarea,.share-panel textarea{min-height:110px;resize:vertical}
+    .share-panel{margin-top:16px}
+    .share-help{white-space:pre-wrap;background:#f3f8ff;border:1px solid #d5e6ff;border-radius:8px;padding:10px;margin:0 0 10px;color:#204a86}
+    .btn{display:inline-flex;align-items:center;justify-content:center;background:var(--primary);color:#fff;padding:10px 16px;border:none;border-radius:999px;font-weight:700;cursor:pointer}
+    body.embedded .top-banner, body.embedded .news-feed, body.embedded .site-nav, body.embedded .tagline{display:none !important}
+    body.embedded .container{margin-top:14px}
+    @media(max-width:700px){.container{padding:0 12px}}
+  </style>
+</head>
+<body>
+  <header class="top-banner">
+    <div class="top-banner-inner">
+      <img src="logo.png" alt="logo" style="max-width:120px;display:block;margin:0">
+      <div class="banner-title">Comunidade Blue Lava</div>
+      <div style="margin-left:8px;display:flex;gap:10px;align-items:center">
+        <a class="social-btn" href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a class="social-btn" href="#" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+        <a class="social-btn" href="#" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+        <a class="social-btn" href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <div class="news-feed" role="region" aria-label="Dicas rápidas para manter a calma">
+    <div class="news-feed-track">
+      <span class="news-tip">🫁 Pânico: inspira 4 segundos e expira 6 segundos, devagar.</span>
+      <span class="news-tip">🧠 Ansiedade: usa o método 5-4-3-2-1 para voltar ao presente.</span>
+      <span class="news-tip">💼 Stress: ciclo 25-5 (foco curto + pausa curta) ajuda a regular o corpo.</span>
+      <span class="news-tip">🔥 Burnout: respeita limites e reduz tarefas extra no dia crítico.</span>
+      <span class="news-tip">🌤️ Depressão: uma micro-vitória por dia já conta como progresso.</span>
+      <span class="news-tip">🔁 TOC: adiar o ritual por 2 minutos pode quebrar o ciclo.</span>
+      <span class="news-tip">🗣️ Esquizofrenia: ativa o teu plano de apoio (ligar, sentar, respirar, pedir ajuda).</span>
+      <span class="news-tip">🧩 Autismo: usa pausas sensoriais e um kit de autorregulação.</span>
+      <span class="news-tip">🚨 Crise aguda: em emergência liga 112 ou SNS 24 (808 24 24 24).</span>
+    </div>
+  </div>
+
+  <nav class="site-nav" aria-label="Main navigation">
+    <div class="container" style="display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;padding:8px 4px">
+      <a href="comunidade.html?tab=historias" class="nav-link active">Histórias</a>
+      <a href="comunidade.html?tab=compreender" class="nav-link">Compreender</a>
+      <a href="comunidade.html?tab=recursos" class="nav-link">Recursos</a>
+      <a href="comunidade.html?tab=origem" class="nav-link">Origem</a>
+    </div>
+  </nav>
+
+  <section class="tagline container">
+    <p class="tagline-text">Histórias reais. Pessoas reais.</p>
+  </section>
+
+  <main class="container">
+    <section id="storiesFeed" class="stories-feed"></section>
+
+    <section id="sharePanel" class="card share-panel" style="display:none">
+      <h2 style="margin-top:0">Partilha de experiências</h2>
+      <p class="share-help">Dentro da caixa, mete isto (muito importante):
+
+Podes começar com algo como:
+'Ultimamente tenho sentido...'
+ou
+'Algo que nunca disse a ninguém é...'</p>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+        <input id="storyName" type="text" placeholder="Nickname (opcional)">
+        <label style="display:inline-flex;align-items:center;gap:6px"><input id="storyAnon" type="checkbox" checked> Partilhar anonimamente</label>
+      </div>
+      <textarea id="storyText" placeholder="Podes começar com algo como:
+'Ultimamente tenho sentido...'
+ou
+'Algo que nunca disse a ninguém é...'"></textarea>
+      <div style="text-align:right;margin-top:10px"><button id="submitStory" class="btn">Partilhar experiência</button></div>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const params = new URLSearchParams(window.location.search);
+      const embed = params.get('embed') === '1';
+      const preserveAnon = params.get('anon') === '1';
+      if (embed) document.body.classList.add('embedded');
+
+      if (preserveAnon) {
+        try { document.getElementById('storyAnon').checked = true; } catch (e) {}
+        document.querySelectorAll('.site-nav a').forEach(a => {
+          const href = a.getAttribute('href');
+          if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) return;
+          a.href = href + (href.includes('?') ? '&anon=1' : '?anon=1');
+        });
+      }
+
+      const EMOJIS = ['🍿','🤯','😢','🫂','😁'];
+      const feed = document.getElementById('storiesFeed');
+
+      function getStories(){ try { return JSON.parse(localStorage.getItem('bluelava_stories')||'[]'); } catch(e){ return []; } }
+      function saveStories(v){ localStorage.setItem('bluelava_stories', JSON.stringify(v)); }
+      function seedStories(){
+        if (getStories().length===0){
+          const now = Date.now();
+          const sample = [
+            {id: now+1, text: 'Há dias em que não sinto nada... e isso assusta mais do que sentir tudo.', name:'', anonymous:true, createdAt: now-86400000*2, reactions:{}},
+            {id: now+2, text: 'Pedir ajuda foi a melhor decisão que tomei; encontrei apoio em pequenos passos.', name:'João', anonymous:false, createdAt: now-86400000, reactions:{}},
+            {id: now+3, text: 'A medicação ajudou-me, mas a compreensão da família foi essencial.', name:'', anonymous:true, createdAt: now-43200000, reactions:{}},
+            {id: now+4, text: 'Aprendi a respirar durante picos de ansiedade e ajuda muito.', name:'Marta', anonymous:false, createdAt: now-20000000, reactions:{}},
+            {id: now+5, text: 'A solidão era o pior, até que entrei num grupo de apoio e senti-me menos só.', name:'', anonymous:true, createdAt: now-10000000, reactions:{}}
+          ];
+          saveStories(sample);
+        }
+      }
+
+      function escapeHtml(str){
+        return String(str)
+          .replace(/&/g,'&amp;')
+          .replace(/</g,'&lt;')
+          .replace(/>/g,'&gt;')
+          .replace(/\"/g,'&quot;')
+          .replace(/'/g,'&#39;');
+      }
+
+      function reactionsHtml(story){
+        const reactions = story.reactions || {};
+        return EMOJIS.map(e => `<button class="reaction-btn" data-id="${story.id}" data-emoji="${e}">${e} <span>${reactions[e] || 0}</span></button>`).join('');
+      }
+
+      function renderStories(){
+        const stories = getStories().slice().sort((a,b)=>b.createdAt - a.createdAt);
+        feed.innerHTML = '';
+        if (stories.length===0) {
+          feed.innerHTML = '<p style="color:#fff">Seja o primeiro a partilhar.</p>';
+          return;
+        }
+        stories.forEach((s,i)=>{
+          const card = document.createElement('article');
+          card.className='story-card card';
+          card.innerHTML = `
+            <p class="story-text">${escapeHtml(s.text)}</p>
+            <div class="story-author">- ${s.anonymous ? 'Anónimo' : (s.name||'Sem nome')}</div>
+            <div class="reactions">${reactionsHtml(s)}</div>
+          `;
+          feed.appendChild(card);
+
+          if ((i % 3) === 2) {
+            const cta = document.createElement('div');
+            cta.className='cta-block card';
+            cta.innerHTML = `
+              <p class="cta-copy">Dentro da caixa, mete isto (muito importante):
+
+Podes começar com algo como:
+'Ultimamente tenho sentido...'
+ou
+'Algo que nunca disse a ninguém é...'</p>
+              <div style="text-align:right"><button class="btn global-share">Partilhar experiência</button></div>
+            `;
+            feed.appendChild(cta);
+          }
+        });
+
+        document.querySelectorAll('.global-share').forEach(b=>b.addEventListener('click', showShare));
+        document.querySelectorAll('.reaction-btn').forEach(b=>b.addEventListener('click', function(){
+          const id = Number(this.dataset.id);
+          const emoji = this.dataset.emoji;
+          const stories = getStories();
+          const story = stories.find(x => x.id === id);
+          if (!story) return;
+          story.reactions = story.reactions || {};
+          story.reactions[emoji] = (story.reactions[emoji] || 0) + 1;
+          saveStories(stories);
+          renderStories();
+        }));
+      }
+
+      function showShare(){
+        const panel = document.getElementById('sharePanel');
+        panel.style.display='block';
+        window.scrollTo({top: panel.offsetTop - 20, behavior:'smooth'});
+      }
+
+      document.getElementById('submitStory').addEventListener('click', function(){
+        const name = document.getElementById('storyName').value.trim();
+        const anonymous = document.getElementById('storyAnon').checked;
+        const text = document.getElementById('storyText').value.trim();
+        if (!text) return alert('Escreve a tua experiência.');
+        const stories = getStories();
+        stories.unshift({
+          id: Date.now(),
+          name,
+          anonymous,
+          text,
+          reactions: {},
+          createdAt: Date.now()
+        });
+        saveStories(stories);
+        document.getElementById('storyText').value='';
+        if (!anonymous) document.getElementById('storyName').value='';
+        document.getElementById('sharePanel').style.display='none';
+        renderStories();
+      });
+
+      seedStories();
+      renderStories();
+    })();
+  </script>
+</body>
+</html>
