@@ -12,7 +12,7 @@
     .top-banner{background:linear-gradient(180deg,#000f2a,#2b4cb8);color:#fff;padding:14px 16px}
     .top-banner-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
     .banner-title{font-weight:700;font-size:1.05rem}
-    .social-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;background:#000;color:#fff;text-decoration:none;box-shadow:0 4px 10px rgba(0,0,0,.28);transition:transform .15s ease,opacity .15s ease}
+    .social-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:999px;background:#000;color:#fff;text-decoration:none;box-shadow:0 4px 10px rgba(0,0,0,.28);transition:transform .15s ease,opacity .15s ease}
     .social-btn:hover{transform:translateY(-1px);opacity:.92}
     .social-btn i{font-size:18px}
     .news-feed{background:#ff6f3d;color:#fff;padding:10px 0;overflow:hidden;white-space:nowrap;position:relative}
@@ -33,18 +33,27 @@
     .story-text{margin:0;color:#222;white-space:pre-wrap}
     .story-author{margin-top:10px;font-weight:600;color:#444}
     .reactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .reaction-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid #e0e0e0;background:#f8fafc;cursor:pointer;font-weight:700}
+    .reaction-btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:10px 12px;border-radius:999px;border:1px solid #e0e0e0;background:#f8fafc;cursor:pointer;font-weight:700}
     .reaction-btn:hover{background:#eef6ff;border-color:#cfe2ff}
-    .cta-block{background:#eaf5ff;border-color:#d5e6ff}
-    .cta-copy{white-space:pre-wrap;font-size:.98rem;color:#153c73;margin:0 0 10px}
-    .cta-block textarea,.share-panel textarea,.share-panel input[type=text]{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;font-family:'Inter',sans-serif}
-    .cta-block textarea,.share-panel textarea{min-height:110px;resize:vertical}
+    .share-panel textarea,.share-panel input[type=text]{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;font-family:'Inter',sans-serif}
+    .share-panel textarea{min-height:110px;resize:vertical}
     .share-panel{margin-top:16px}
+    .share-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+    .share-name{flex:1 1 240px}
+    .share-anon{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:600}
     .share-help{white-space:pre-wrap;background:#f3f8ff;border:1px solid #d5e6ff;border-radius:8px;padding:10px;margin:0 0 10px;color:#204a86}
-    .btn{display:inline-flex;align-items:center;justify-content:center;background:var(--primary);color:#fff;padding:10px 16px;border:none;border-radius:999px;font-weight:700;cursor:pointer}
-    body.embedded .top-banner, body.embedded .news-feed, body.embedded .site-nav, body.embedded .tagline{display:none !important}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;background:var(--primary);color:#fff;padding:10px 16px;border:none;border-radius:999px;font-weight:700;cursor:pointer}
+    body.embedded .top-banner, body.embedded .news-feed, body.embedded .site-nav, body.embedded .tagline, body.embedded footer{display:none !important}
     body.embedded .container{margin-top:14px}
-    @media(max-width:700px){.container{padding:0 12px}}
+    @media(max-width:700px){
+      html,body{background-attachment:scroll,scroll,scroll}
+      .container{padding:0 12px}
+      .card{padding:12px}
+      .share-row{flex-direction:column;align-items:stretch}
+      .share-name{flex-basis:auto}
+      .share-anon{width:100%}
+      .btn{width:100%}
+    }
   </style>
 </head>
 <body>
@@ -93,12 +102,12 @@
   <main class="container">
     <section id="storiesFeed" class="stories-feed"></section>
 
-    <section id="sharePanel" class="card share-panel" style="display:none">
+    <section id="sharePanel" class="card share-panel">
       <h2 style="margin-top:0">Partilha de experiências</h2>
       <p class="share-help">Algo que nunca disse a ninguém é...</p>
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
-        <input id="storyName" type="text" placeholder="Nickname (opcional)">
-        <label style="display:inline-flex;align-items:center;gap:6px"><input id="storyAnon" type="checkbox" checked> Partilhar anonimamente</label>
+      <div class="share-row">
+        <input id="storyName" class="share-name" type="text" placeholder="Nickname (opcional)">
+        <label class="share-anon"><input id="storyAnon" type="checkbox" checked> Partilhar anonimamente</label>
       </div>
       <textarea id="storyText" placeholder="Algo que nunca disse a ninguém é..."></textarea>
       <div style="text-align:right;margin-top:10px"><button id="submitStory" class="btn">Partilhar experiência</button></div>
@@ -122,24 +131,22 @@
       }
 
       const EMOJIS = ['🍿','🤯','😢','🫂','😁'];
+      const LEGACY_SAMPLE_TEXTS = new Set([
+        'Há dias em que não sinto nada... e isso assusta mais do que sentir tudo.',
+        'Pedir ajuda foi a melhor decisão que tomei; encontrei apoio em pequenos passos.',
+        'A medicação ajudou-me, mas a compreensão da família foi essencial.',
+        'Aprendi a respirar durante picos de ansiedade e ajuda muito.',
+        'A solidão era o pior, até que entrei num grupo de apoio e senti-me menos só.'
+      ]);
       const feed = document.getElementById('storiesFeed');
 
       function getStories(){ try { return JSON.parse(localStorage.getItem('bluelava_stories')||'[]'); } catch(e){ return []; } }
       function saveStories(v){ localStorage.setItem('bluelava_stories', JSON.stringify(v)); }
-      function seedStories(){
-        if (getStories().length===0){
-          const now = Date.now();
-          const sample = [
-            {id: now+1, text: 'Há dias em que não sinto nada... e isso assusta mais do que sentir tudo.', name:'', anonymous:true, createdAt: now-86400000*2, reactions:{}},
-            {id: now+2, text: 'Pedir ajuda foi a melhor decisão que tomei; encontrei apoio em pequenos passos.', name:'João', anonymous:false, createdAt: now-86400000, reactions:{}},
-            {id: now+3, text: 'A medicação ajudou-me, mas a compreensão da família foi essencial.', name:'', anonymous:true, createdAt: now-43200000, reactions:{}},
-            {id: now+4, text: 'Aprendi a respirar durante picos de ansiedade e ajuda muito.', name:'Marta', anonymous:false, createdAt: now-20000000, reactions:{}},
-            {id: now+5, text: 'A solidão era o pior, até que entrei num grupo de apoio e senti-me menos só.', name:'', anonymous:true, createdAt: now-10000000, reactions:{}}
-          ];
-          saveStories(sample);
-        }
+      function removeLegacySampleStories(){
+        const stories = getStories();
+        const filtered = stories.filter(story => !LEGACY_SAMPLE_TEXTS.has(story.text));
+        if (filtered.length !== stories.length) saveStories(filtered);
       }
-
       function escapeHtml(str){
         return String(str)
           .replace(/&/g,'&amp;')
@@ -158,10 +165,10 @@
         const stories = getStories().slice().sort((a,b)=>b.createdAt - a.createdAt);
         feed.innerHTML = '';
         if (stories.length===0) {
-          feed.innerHTML = '<p style="color:#fff">Seja o primeiro a partilhar.</p>';
+          feed.innerHTML = '<div class="card"><p style="margin:0">Ainda não existem partilhas publicadas. Usa a secção acima para seres a primeira pessoa a partilhar a tua experiência.</p></div>';
           return;
         }
-        stories.forEach((s,i)=>{
+        stories.forEach((s)=>{
           const card = document.createElement('article');
           card.className='story-card card';
           card.innerHTML = `
@@ -170,19 +177,7 @@
             <div class="reactions">${reactionsHtml(s)}</div>
           `;
           feed.appendChild(card);
-
-          if ((i % 3) === 2) {
-            const cta = document.createElement('div');
-            cta.className='cta-block card';
-            cta.innerHTML = `
-              <p class="cta-copy">Algo que nunca disse a ninguém é...</p>
-              <div style="text-align:right"><button class="btn global-share">Partilhar experiência</button></div>
-            `;
-            feed.appendChild(cta);
-          }
         });
-
-        document.querySelectorAll('.global-share').forEach(b=>b.addEventListener('click', showShare));
         document.querySelectorAll('.reaction-btn').forEach(b=>b.addEventListener('click', function(){
           const id = Number(this.dataset.id);
           const emoji = this.dataset.emoji;
@@ -194,12 +189,6 @@
           saveStories(stories);
           renderStories();
         }));
-      }
-
-      function showShare(){
-        const panel = document.getElementById('sharePanel');
-        panel.style.display='block';
-        window.scrollTo({top: panel.offsetTop - 20, behavior:'smooth'});
       }
 
       document.getElementById('submitStory').addEventListener('click', function(){
@@ -219,24 +208,13 @@
         saveStories(stories);
         document.getElementById('storyText').value='';
         if (!anonymous) document.getElementById('storyName').value='';
-        document.getElementById('sharePanel').style.display='none';
         renderStories();
+        window.scrollTo({top: 0, behavior:'smooth'});
       });
 
-      seedStories();
+      removeLegacySampleStories();
       renderStories();
     })();
   </script>
-  <footer style="background:#07132a;color:#e6eefc;padding:18px 12px;border-top:1px solid rgba(255,255,255,0.06);font-size:0.95rem">
-    <div style="max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:8px">
-      <strong>Rodapé — Dicas para lidar com ataques de pânico</strong>
-      <ul style="margin:0;padding-left:18px">
-        <li>Respira devagar: inspira 4 segundos, segura 4 segundos, expira 6 segundos.</li>
-        <li>Grounding: identifica 5 coisas que vês, 4 que tocas, 3 que ouves, 2 que cheiras e 1 que saboreias.</li>
-        <li>Senta-te, relaxa os ombros e bebe água; movimentos lentos ajudam a regular o corpo.</li>
-        <li>Procura apoio: fala com um amigo, familiar ou profissional. Em emergência liga 112 ou SNS 24 (808 24 24 24).</li>
-      </ul>
-    </div>
-  </footer>
 </body>
 </html>
