@@ -13,13 +13,15 @@ create table if not exists public.stories (
 alter table public.stories enable row level security;
 
 -- Public read policy
-create policy if not exists "stories_select_public"
+drop policy if exists "stories_select_public" on public.stories;
+create policy "stories_select_public"
 on public.stories
 for select
 using (true);
 
 -- Public insert policy
-create policy if not exists "stories_insert_public"
+drop policy if exists "stories_insert_public" on public.stories;
+create policy "stories_insert_public"
 on public.stories
 for insert
 with check (
@@ -29,7 +31,8 @@ with check (
 );
 
 -- Public update policy (only reactions and display fields are expected)
-create policy if not exists "stories_update_public"
+drop policy if exists "stories_update_public" on public.stories;
+create policy "stories_update_public"
 on public.stories
 for update
 using (true)
