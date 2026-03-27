@@ -42,6 +42,7 @@
     .share-name{flex:1 1 240px}
     .share-anon{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:600}
     .share-help{white-space:pre-wrap;background:#f3f8ff;border:1px solid #d5e6ff;border-radius:8px;padding:10px;margin:0 0 10px;color:#204a86}
+    .backend-status{margin:0 0 10px;font-size:.92rem;color:#204a86}
     .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;background:var(--primary);color:#fff;padding:10px 16px;border:none;border-radius:999px;font-weight:700;cursor:pointer}
     body.embedded .top-banner, body.embedded .news-feed, body.embedded .site-nav, body.embedded .tagline, body.embedded footer{display:none !important}
     body.embedded .container{margin-top:14px}
@@ -108,6 +109,7 @@
     <section id="sharePanel" class="card share-panel">
       <h2 style="margin-top:0">Partilha de experiências</h2>
       <p class="share-help">Algo que nunca disse a ninguém é...</p>
+      <p id="storiesBackendStatus" class="backend-status"></p>
       <div class="share-row">
         <input id="storyName" class="share-name" type="text" placeholder="Nickname (opcional)">
         <label class="share-anon"><input id="storyAnon" type="checkbox" checked> Partilhar anonimamente</label>
@@ -117,6 +119,8 @@
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="stories-config.js"></script>
   <script>
     (function(){
       const params = new URLSearchParams(window.location.search);
@@ -133,6 +137,11 @@
         });
       }
 
+      const config = window.BLUELAVA_STORIES_CONFIG || {};
+      const supabaseUrl = String(config.supabaseUrl || '').trim();
+      const supabaseAnonKey = String(config.supabaseAnonKey || '').trim();
+      const supabaseEnabled = Boolean(window.supabase && supabaseUrl && supabaseAnonKey);
+
       const EMOJIS = ['🍿','🤯','😢','🫂','😁'];
       const LEGACY_SAMPLE_TEXTS = new Set([
         'Há dias em que não sinto nada... e isso assusta mais do que sentir tudo.',
@@ -142,6 +151,19 @@
         'A solidão era o pior, até que entrei num grupo de apoio e senti-me menos só.'
       ]);
       const feed = document.getElementById('storiesFeed');
+      const backendStatus = document.getElementById('storiesBackendStatus');
+      let storiesCache = [];
+      let supabaseClient = null;
+
+      if (supabaseEnabled) {
+        supabaseClient = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+      }
+
+      function setStatus(text, tone){
+        if (!backendStatus) return;
+        backendStatus.textContent = text;
+        backendStatus.style.color = tone === 'error' ? '#b42318' : '#204a86';
+      }
 
       function getStories(){ try { return JSON.parse(localStorage.getItem('bluelava_stories')||'[]'); } catch(e){ return []; } }
       function saveStories(v){ localStorage.setItem('bluelava_stories', JSON.stringify(v)); }
@@ -164,8 +186,19 @@
         return EMOJIS.map(e => `<button class="reaction-btn" data-id="${story.id}" data-emoji="${e}">${e} <span>${reactions[e] || 0}</span></button>`).join('');
       }
 
-      function renderStories(){
-        const stories = getStories().slice().sort((a,b)=>b.createdAt - a.createdAt);
+      function normalizeRemoteStory(row){
+        return {
+          id: row.id,
+          name: row.nickname || '',
+          anonymous: Boolean(row.is_anonymous),
+          text: row.story_text || '',
+          reactions: row.reactions || {},
+          createdAt: new Date(row.created_at).getTime() || Date.now()
+        };
+      }
+
+      function renderStories(stories){
+        storiesCache = stories.slice();
         feed.innerHTML = '';
         if (stories.length===0) {
           feed.innerHTML = '<div class="card"><p style="margin:0">Ainda não existem partilhas publicadas. Usa a secção acima para seres a primeira pessoa a partilhar a tua experiência.</p></div>';
@@ -181,42 +214,120 @@
           `;
           feed.appendChild(card);
         });
-        document.querySelectorAll('.reaction-btn').forEach(b=>b.addEventListener('click', function(){
+        document.querySelectorAll('.reaction-btn').forEach(b=>b.addEventListener('click', async function(){
           const id = Number(this.dataset.id);
           const emoji = this.dataset.emoji;
-          const stories = getStories();
-          const story = stories.find(x => x.id === id);
+          const story = storiesCache.find(x => Number(x.id) === id);
           if (!story) return;
           story.reactions = story.reactions || {};
-          story.reactions[emoji] = (story.reactions[emoji] || 0) + 1;
-          saveStories(stories);
-          renderStories();
+          const nextReactions = Object.assign({}, story.reactions, {
+            [emoji]: (story.reactions[emoji] || 0) + 1
+          });
+
+          if (supabaseClient) {
+            const previous = story.reactions;
+            story.reactions = nextReactions;
+            renderStories(storiesCache);
+            const { error } = await supabaseClient
+              .from('stories')
+              .update({ reactions: nextReactions })
+              .eq('id', story.id);
+            if (error) {
+              story.reactions = previous;
+              renderStories(storiesCache);
+              setStatus('Nao foi possivel atualizar a reacao. Tenta novamente.', 'error');
+            }
+            return;
+          }
+
+          const localStories = getStories();
+          const localStory = localStories.find(x => Number(x.id) === id);
+          if (!localStory) return;
+          localStory.reactions = nextReactions;
+          saveStories(localStories);
+          renderStories(localStories.slice().sort((a,b)=>b.createdAt - a.createdAt));
         }));
       }
 
-      document.getElementById('submitStory').addEventListener('click', function(){
+      async function loadRemoteStories(){
+        const { data, error } = await supabaseClient
+          .from('stories')
+          .select('id,nickname,is_anonymous,story_text,reactions,created_at')
+          .order('created_at', { ascending: false })
+          .limit(200);
+        if (error) throw error;
+        return (data || []).map(normalizeRemoteStory);
+      }
+
+      async function loadAndRenderStories(){
+        if (!supabaseClient) {
+          removeLegacySampleStories();
+          const stories = getStories().slice().sort((a,b)=>b.createdAt - a.createdAt);
+          renderStories(stories);
+          return;
+        }
+        try {
+          const stories = await loadRemoteStories();
+          renderStories(stories);
+        } catch (err) {
+          console.error(err);
+          setStatus('Ligacao ao feed partilhado indisponivel. A mostrar modo local.', 'error');
+          const stories = getStories().slice().sort((a,b)=>b.createdAt - a.createdAt);
+          renderStories(stories);
+        }
+      }
+
+      document.getElementById('submitStory').addEventListener('click', async function(){
         const name = document.getElementById('storyName').value.trim();
         const anonymous = document.getElementById('storyAnon').checked;
         const text = document.getElementById('storyText').value.trim();
         if (!text) return alert('Escreve a tua experiência.');
-        const stories = getStories();
-        stories.unshift({
-          id: Date.now(),
-          name,
-          anonymous,
-          text,
-          reactions: {},
-          createdAt: Date.now()
-        });
-        saveStories(stories);
+
+        if (supabaseClient) {
+          const { error } = await supabaseClient
+            .from('stories')
+            .insert({
+              nickname: name,
+              is_anonymous: anonymous,
+              story_text: text,
+              reactions: {}
+            });
+          if (error) {
+            setStatus('Nao foi possivel publicar agora. Tenta novamente.', 'error');
+            return;
+          }
+        } else {
+          const stories = getStories();
+          stories.unshift({
+            id: Date.now(),
+            name,
+            anonymous,
+            text,
+            reactions: {},
+            createdAt: Date.now()
+          });
+          saveStories(stories);
+        }
+
         document.getElementById('storyText').value='';
         if (!anonymous) document.getElementById('storyName').value='';
-        renderStories();
+        await loadAndRenderStories();
         window.scrollTo({top: 0, behavior:'smooth'});
       });
 
-      removeLegacySampleStories();
-      renderStories();
+      if (supabaseClient) {
+        setStatus('Feed partilhado ativo: novas historias aparecem para toda a comunidade em tempo real.', 'ok');
+        supabaseClient
+          .channel('stories-live')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'stories' }, function(){
+            loadAndRenderStories();
+          })
+          .subscribe();
+      } else {
+        setStatus('Modo local ativo: para feed global, configura o Supabase em stories-config.js.', 'ok');
+      }
+
+      loadAndRenderStories();
     })();
   </script>
 </body>
